@@ -116,4 +116,4 @@ dist
 .editorconfig
 .discloudignore
 discloud.config
-test/
+package-lock.json
