@@ -5,17 +5,16 @@ module.exports = {
   async execute(message) {
     const { client, author } = message;
     const aiName = client.user.username;
-
-    if (!message.mentions.has(client.user.id)) return;
-    message.channel.sendTyping();
-    openai.body.stop[0] = ` ${author.username}:`;
-
     const mention = "<@" + client.user.id + ">";
     const userMessage = message.content.replace(mention, "");
 
+    if (!message.mentions.has(client.user.id)) return;
+
+    message.channel.sendTyping();
+
     openai.push(`${author.username}: ${userMessage}`);
 
-    const data = await openai.execute();
+    const data = await openai.execute(message);
     const aiMessage = data.choices[0].text;
 
     if (!aiMessage.startsWith("Error:")) {
@@ -25,9 +24,12 @@ module.exports = {
         openai.push(aiMessage);
       }
     }
-   
-    if (!aiMessage.trim().replace(`${aiName}: `, "").length) return;
-    
-    message.reply(aiMessage.replace(`${aiName}: `, ""));
+
+    const removedName = aiMessage.replace(`${aiName}: `, "");
+    const isEmpty = !removedName.trim().length;
+
+    if (isEmpty) return;
+
+    message.reply(removedName);
   },
 };
