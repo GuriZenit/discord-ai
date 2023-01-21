@@ -16,6 +16,6 @@ module.exports = {
 
     await events.execute(client);
     await client.login(config.bot.token);
-    return await client;
+    return client;
   },
 };
