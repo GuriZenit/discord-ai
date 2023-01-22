@@ -1,11 +1,9 @@
 const fetch = require("node-fetch");
-const config = require("../Configs/config.js");
-const { key, model, context } = config.openai;
 
 module.exports = {
   cache: [],
   body: {
-    temperature: 0,
+    temperature: 1,
     max_tokens: 2048,
     top_p: 1,
     frequency_penalty: 0,
@@ -13,6 +11,8 @@ module.exports = {
   },
   async execute(message) {
     const { client, author } = message;
+    const { config, logsChannel } = client;
+    const { key, model, context } = config.openai;
     const { cache, body } = this;
     const aiName = client.user.username;
     const userName = author.username;
@@ -44,18 +44,25 @@ module.exports = {
 
     const data = await response.json();
 
+    if (data.usage) {
+      const cleanAmount = 4;
+      const { total_tokens, prompt_tokens, completion_tokens } = data.usage;
+      const msg = [
+        `> prompt_tokens:      ${prompt_tokens}/2000`,
+        `> completion_tokens:  ${completion_tokens}/2000`,
+        `> total_tokens:       ${total_tokens}/4000`,
+      ];
+
+      if (total_tokens >= 1000) {
+        this.cache.splice(0, cleanAmount);
+        logsChannel.send(`CACHE CLEANED!\n${msg.join("\n")}`);
+      }
+    }
+
     if (data.error)
       return {
         choices: [{ text: "Error: " + data.error.message }],
       };
-
-    if (data.usage) {
-      const cleanAmount = 3;
-
-      if (data.usage.total_tokens >= 1000) {
-        this.cache.splice(0, cleanAmount);
-      }
-    }
 
     return data;
   },
