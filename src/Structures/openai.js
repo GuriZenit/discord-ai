@@ -1,31 +1,30 @@
 const fetch = require("node-fetch");
-const config = require("../Configs/config.js");
-const { key, model, context } = config.openai;
 
 module.exports = {
   cache: [],
   body: {
-    temperature: 0,
+    temperature: 1,
     max_tokens: 2048,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0.6,
   },
   async execute(message) {
-    const { client, author } = message;
     const { cache, body } = this;
+    const { client, author } = message;
     const aiName = client.user.username;
     const userName = author.username;
+    const { key, model, context } = client.config.openai;
 
-    const prompt = context
+    const newPrompt = context
       .concat(cache)
       .join("\n")
-      .replaceAll("%AI_NAME", aiName)
-      .replaceAll("%USER_NAME", userName);
+      .replace(/%AI_NAME/g, aiName)
+      .replace(/%USER_NAME/g, userName);
 
     const bodyJson = JSON.stringify(
       Object.assign(body, {
-        prompt: prompt,
+        prompt: newPrompt,
         stop: [` ${userName}:`, ` ${aiName}:`],
       })
     );
@@ -44,18 +43,19 @@ module.exports = {
 
     const data = await response.json();
 
+    if (data.usage) {
+      const cleanAmount = 4;
+      const { total_tokens } = data.usage;
+
+      if (total_tokens >= 1000) {
+        this.cache.splice(0, cleanAmount);
+      }
+    }
+
     if (data.error)
       return {
         choices: [{ text: "Error: " + data.error.message }],
       };
-
-    if (data.usage) {
-      const cleanAmount = 3;
-
-      if (data.usage.total_tokens >= 1000) {
-        this.cache.splice(0, cleanAmount);
-      }
-    }
 
     return data;
   },
