@@ -14,7 +14,7 @@ module.exports = {
 
     openai.push(`${author.username}: ${userMessage}`);
 
-    const data = await openai.execute(message);
+    const data = await openai.execute(client, author);
     let aiMessage = data.choices[0].text;
 
     const isError = aiMessage.startsWith("Error:");
