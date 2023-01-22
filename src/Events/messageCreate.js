@@ -27,8 +27,15 @@ module.exports = {
 
     const removedName = aiMessage.replace(`${aiName}: `, "");
     const isEmpty = !removedName.trim().length;
+    const isMaxLength = removedName.length > 2000;
 
-    if (isEmpty) return;
+    if (isEmpty) {
+      return message.reply("Error: My reply was empty!");
+    }
+
+    if (isMaxLength) {
+      return message.reply("Error: Message exceeded 2000 length!");
+    }
 
     message.reply(removedName);
   },
