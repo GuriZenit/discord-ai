@@ -9,33 +9,31 @@ module.exports = {
     frequency_penalty: 0,
     presence_penalty: 0.6,
   },
-  async execute(message) {
-    const { cache, body } = this;
-    const { client, author } = message;
+  async execute(client, author) {
+    const { openai } = client.config;
     const aiName = client.user.username;
     const userName = author.username;
-    const { key, model, context } = client.config.openai;
 
-    const newPrompt = context
-      .concat(cache)
+    const newPrompt = openai.context
+      .concat(this.cache)
       .join("\n")
       .replace(/%AI_NAME/g, aiName)
       .replace(/%USER_NAME/g, userName);
 
     const bodyJson = JSON.stringify(
-      Object.assign(body, {
+      Object.assign(this.body, {
         prompt: newPrompt,
         stop: [` ${userName}:`, ` ${aiName}:`],
       })
     );
 
     const response = await fetch(
-      `https://api.openai.com/v1/engines/${model}/completions`,
+      `https://api.openai.com/v1/engines/${openai.model}/completions`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${key}`,
+          Authorization: `Bearer ${openai.key}`,
         },
         body: bodyJson,
       }
