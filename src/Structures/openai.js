@@ -39,6 +39,11 @@ module.exports = {
       }
     ).catch(() => {});
 
+    if (!response)
+      return {
+        choices: [{ text: "Error: No response." }],
+      };
+
     const data = await response.json();
 
     if (data.usage) {
