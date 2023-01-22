@@ -15,19 +15,23 @@ module.exports = {
     openai.push(`${author.username}: ${userMessage}`);
 
     const data = await openai.execute(message);
-    const aiMessage = data.choices[0].text;
+    let aiMessage = data.choices[0].text;
 
-    if (!aiMessage.startsWith("Error:")) {
-      if (!aiMessage.includes(`${aiName}:`)) {
+    const isError = aiMessage.startsWith("Error:");
+    const isNamed = aiMessage.includes(`${aiName}:`);
+
+    if (!isError) {
+      if (!isNamed) {
         openai.push(`${aiName}: ${aiMessage}`);
       } else {
         openai.push(aiMessage);
       }
     }
 
-    const removedName = aiMessage.replace(`${aiName}: `, "");
-    const isEmpty = !removedName.trim().length;
-    const isMaxLength = removedName.length > 2000;
+    aiMessage = aiMessage.replace(`${aiName}: `, "");
+
+    const isEmpty = !aiMessage.trim().length;
+    const isMaxLength = aiMessage.length > 2000;
 
     if (isEmpty) {
       return message.reply("Error: My reply was empty!");
@@ -37,6 +41,6 @@ module.exports = {
       return message.reply("Error: Message exceeded 2000 length!");
     }
 
-    message.reply(removedName);
+    message.reply(aiMessage);
   },
 };
