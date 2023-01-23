@@ -7,8 +7,10 @@ module.exports = {
     const aiName = client.user.username;
     const mention = "<@" + client.user.id + ">";
     const userMessage = message.content.replace(mention, "");
-
     if (!message.mentions.has(client.user.id)) return;
+    if (userMessage.includes(".cleanMessages")) {
+    	openai.cache = []
+    }
 
     message.channel.sendTyping();
 
