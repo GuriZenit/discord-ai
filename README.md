@@ -1,9 +1,9 @@
 # discord-ai
-A discord bot using ChatGPT API!
+A discord bot using ChatGPT 3 API!
 
 ## Usage
 
-You will need only two things, the discord-bot and openai-api's tokens
+You only need two things, both discord-bo and openai-api's tokens
 you can see a example of the `.env` file here:
 
 ```
@@ -11,16 +11,19 @@ TOKEN=discord-bot-token-here
 OPENAI_API_KEY=openai-api-key-here
 ```
 
+You can get the Bot's token on Discord Developer Portal, and the  openai's token
+on their website, You can  make a account [here](https://beta.openai.com/signup).
+
 ## Observations
 
 ### Token's limit
 
-I did it in a way that the AI remembers the previous messages,
-thus being able to continue in the same subject, but due to the
-limitations of the API, it is necessary to clean the old messages,
-this happens when it reaches a certain number of tokens,
-[seee more](https://beta.openai.com/docs). You can determine the amount of messages that will be
-cleaned, just edit that constant:
+The AI remembers the previous messages, thus being able to continue in
+the same topic, but due to the limitations of the API, it is necessary
+to clean the old messages, this happens when it reaches a certain number
+of tokens, [seee more](https://beta.openai.com/docs). You can determine
+the amount of messages that will be cleaned, just edit that constant in
+`src/Structures/openai.js`:
 
 ```javascript
 const cleanAmount = 4;
@@ -32,20 +35,20 @@ if (total_tokens >= 1000) {
 ```
 
 You will get an error message if you reach the token's limit,
-so we recommend leaving it at least `3`, default is `4`.
+so I recommend leaving it at least `3`, default is `4`.
 
 ### Default message context
 
 There is a context message in `src/Configs/config.js` that is the
-first thing the bot receives, based on what it defines how it will
-react in the next messages, it is basically a teaching, I don't
-recommend changing it, but I think you know what you're doing!
+first thing the IA receives, based on what, it defines how it will
+react in the next messages, I don't recommend changing it, but I
+think you know what you're doing!
 
 ### Username knowledge 
 
 Yes the AI knows your username, and everyone who talks to it,
-this is possible precisely because of [context](#Default-message-context), look at this
-example of how the IA reads the messages!
+this is possible because of [context](#Default-message-context), look at
+this example of how the IA reads the messages!
 
 ```
 username: Good Evening!
