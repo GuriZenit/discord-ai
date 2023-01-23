@@ -3,7 +3,7 @@ A discord bot using ChatGPT 3 API!
 
 ## Usage
 
-You only need two things, both discord-bo and openai-api's tokens
+You only need two things, both discord-bot and openai-api's tokens,
 you can see a example of the `.env` file here:
 
 ```
@@ -11,8 +11,8 @@ TOKEN=discord-bot-token-here
 OPENAI_API_KEY=openai-api-key-here
 ```
 
-You can get the Bot's token on Discord Developer Portal, and the  openai's token
-on their website, You can  make a account [here](https://beta.openai.com/signup).
+You can get the Bot's token on Discord Developer Portal, and the  openai's
+token on their website, make a account [here](https://beta.openai.com/signup).
 
 ## Observations
 
