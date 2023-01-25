@@ -3,7 +3,7 @@ A discord bot using ChatGPT 3 API!
 
 ## Usage
 
-You only need two things, both discord-bot and openai-api's tokens,
+You only need two things, The discord-bot token and the openai-api token
 you can see a example of the `.env` file here:
 
 ```
